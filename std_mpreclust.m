@@ -63,7 +63,7 @@ numberOfComponents = length(STUDY.cluster(STUDY.etc.preclust.clustlevel).comps);
 % ERP measure
 if  ismember('erp', measuresToUseInClustering)
     if (~isfield(STUDY.preclust,'similarity') || ~isfield(STUDY.preclust.similarity,'erpCorr') || size(STUDY.preclust.similarity.erpCorr,1) ~= numberOfComponents)
-        [STUDY, erpdata] = std_readdata(STUDY,ALLEEG,'clusters',STUDY.etc.preclust.clustlevel,'infotype','erp');
+        [STUDY, erpdata] = std_readdata(STUDY,ALLEEG,'clusters',STUDY.etc.preclust.clustlevel,'datatype','erp');
         numberOfConditions = size(erpdata,1);
         numberOfGroups     = size(erpdata,2);
         clustinfo = STUDY.cluster(STUDY.etc.preclust.clustlevel);
@@ -97,11 +97,11 @@ end
 if ismember('ersp', measuresToUseInClustering)
     if (~isfield(STUDY.preclust,'similarity') || ~isfield(STUDY.preclust.similarity,'erspCorr') || size(STUDY.preclust.similarity.erspCorr,1) ~= numberOfComponents)
         fprintf('\n');
-        [STUDY, erspdata] = std_readdata(STUDY,ALLEEG,'clusters',STUDY.etc.preclust.clustlevel,'infotype','ersp');
+        [STUDY, erspdata] = std_readdata(STUDY,ALLEEG,'clusters',STUDY.etc.preclust.clustlevel,'datatype','ersp');
         clustinfo = STUDY.cluster(STUDY.etc.preclust.clustlevel);
         
         % combine conditions in each group, then combine groups together
-        erspdata = cat(3, erspdata{:});
+        erspdata = cat(1, erspdata{:});
         
         % calculate correlations
         erspCorr = [];
@@ -122,17 +122,15 @@ if ismember('ersp', measuresToUseInClustering)
     end
 end
 
-
-
 % ITC measure
 if ismember('itc', measuresToUseInClustering)
     if (~isfield(STUDY.preclust,'similarity') || ~isfield(STUDY.preclust.similarity,'itcCorr') || size(STUDY.preclust.similarity.itcCorr,1) ~= numberOfComponents)
         fprintf('\n');
-        [STUDY, itcdata] = std_readdata(STUDY,ALLEEG,'clusters',STUDY.etc.preclust.clustlevel,'infotype','itc');
+        [STUDY, itcdata] = std_readdata(STUDY,ALLEEG,'clusters',STUDY.etc.preclust.clustlevel,'datatype','itc');
         clustinfo = STUDY.cluster(STUDY.etc.preclust.clustlevel);
         
         % combine conditions in each group, then combine groups together
-        itcdata = cat(3, itcdata{:});
+        itcdata = cat(1, itcdata{:});
         
         % calculate correlations
         itcCorr = [];
@@ -162,7 +160,7 @@ if ismember('dipole', measuresToUseInClustering)
         sets  = STUDY.cluster(STUDY.etc.preclust.clustlevel).sets;
         comps = STUDY.cluster(STUDY.etc.preclust.clustlevel).comps;
         for iComp = 1:length(comps)
-            dipoles(iComp) = ALLEEG(sets(1,iComp)).dipfit.model(comps(iComp));
+            dipoles(iComp).posxyz = ALLEEG(sets(1,iComp)).dipfit.model(comps(iComp)).posxyz;
         end
         clustinfo = STUDY.cluster(STUDY.etc.preclust.clustlevel);
         
@@ -190,7 +188,7 @@ end
 if ismember('spec', measuresToUseInClustering)
     if (~isfield(STUDY.preclust,'similarity') || ~isfield(STUDY.preclust.similarity,'specCorr') || size(STUDY.preclust.similarity.specCorr,1) ~= numberOfComponents)
         fprintf('\nSpectra: percent done = ');
-        [STUDY specdata] = std_readdata(STUDY,ALLEEG,'clusters',STUDY.etc.preclust.clustlevel,'infotype','spec');
+        [STUDY specdata] = std_readdata(STUDY,ALLEEG,'clusters',STUDY.etc.preclust.clustlevel,'datatype','spec');
         clustinfo = STUDY.cluster(STUDY.etc.preclust.clustlevel);
         %   specdata = cat(2,clustinfo.specdata{1}, clustinfo.specdata{2});
         
@@ -237,7 +235,7 @@ end
 if ismember('map', measuresToUseInClustering)
     if (~isfield(STUDY.preclust,'similarity') || ~isfield(STUDY.preclust.similarity,'mapCorr') || size(STUDY.preclust.similarity.mapCorr,1) ~= numberOfComponents)
         
-        [STUDY clustinfo] = std_readdata(STUDY,ALLEEG,'clusters',STUDY.etc.preclust.clustlevel,'infotype','map');
+        [STUDY clustinfo] = std_readdata(STUDY,ALLEEG,'clusters',STUDY.etc.preclust.clustlevel,'datatype','map');
         clustinfo = STUDY.cluster(STUDY.etc.preclust.clustlevel);
         fprintf('\nScalp maps: percent done = ');
         
